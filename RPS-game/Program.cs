@@ -7,160 +7,394 @@ using System.Threading.Tasks;
 namespace RPS_game
 {
     class Program
-    {        
+    {       
+        int rounds;
+        int score_player;
+        int score_cpu;
+       
+        string p_choice;
+        string cpu_choice;
+        string result;
+        string winner;
+
+        ConsoleKeyInfo KeyInfo;
+        
         static void Main(string[] args)
         {
             Console.Title = "ROCK PAPER SCISSORS - THE GAME";
+            Console.SetWindowSize(60, 33);
+            Program p = new Program();
             
-            // Start screen, make it simple "GAME NAME" "START GAME"
-            // Ask player name -> Move on to game itself
-            Console.WriteLine("**************************************");
-            Console.WriteLine("*** ROCK PAPER SCISSORS - THE GAME ***");
-            Console.WriteLine("**************************************");
-            Console.WriteLine();
+            p.StartScreen();
+            p.GameLoop();
+        }
 
-            // Ask for player name and save it for a variable
-            Console.Write("Player name: ");
-            string player = Console.ReadLine();
-            Console.WriteLine();
+        // Print the starting screen
+        public void StartScreen()
+        {
+            StartHeader();
+            StartGreet();
+            GoToSettings();
+        }
 
-            // Ask for the number of points for the win -> best of 3, 5 or 7
-            Console.Write("Number of wins for the belt: ");
-            int rounds = Convert.ToInt32(Console.ReadLine());
-            Console.WriteLine();
-            Console.WriteLine();
+        // Main loop
+        public void GameLoop()
+        {           
+            GetSettings();
+            Display();
 
-            // Start the game
-            Console.Write("Start the game by pressing ENTER");
-            Console.ReadLine();
-            Console.Clear();
-
-            int score_player = 0;
-            int score_cpu = 0;
-
-            //Game loop
             while (score_player < rounds || score_cpu < rounds)
-            {                                
-                // Show Score                              
-                Console.WriteLine("******************************************");
-                Console.WriteLine("******************************************");
-                Console.WriteLine("***   PLAYER SCORE   ***   CPU SCORE   ***");
-                Console.WriteLine("***        " + score_player + "         ***       " + score_cpu + "       ***");
-                Console.WriteLine("******************************************");
-                Console.WriteLine("******************************************");
-                Console.WriteLine("");
-                Console.WriteLine("");
-
-                // Check score
-                if (score_player == rounds || score_cpu == rounds)
+            {
+                if (score_player == rounds ||score_cpu == rounds)
                 {
                     break;
                 }
-
-                // Get players choice
-                Console.WriteLine("Chooce ROCK [1], PAPER [2] or SCISSORS [3]\n");
-                Console.Write(player + "s choice: ");
-                string player_choice = Console.ReadLine().ToUpper();
-
-                // Get CPUs choice
-                Random rndm = new Random();
-                int get_cpu_choice = rndm.Next(1, 4);
-                string cpu_choice = get_cpu_choice.ToString();
-
-                // Compare users and CPU's choices and declare the result           
-                if ((player_choice == "1" || player_choice == "ROCK") && cpu_choice == "1")
-                {
-                    Console.Clear();
-                    Console.WriteLine(player + "s choice: ROCK");
-                    Console.WriteLine("CPU's choice: ROCK");
-                    Console.WriteLine("It's a DRAW!");
-                }
-                else if ((player_choice == "1" || player_choice == "ROCK") && cpu_choice == "2")
-                {
-                    Console.Clear();
-                    Console.WriteLine(player + "s choice: ROCK");
-                    Console.WriteLine("CPU's choice: PAPER");
-                    Console.WriteLine("CPU WINS!");
-                    ++score_cpu;
-                }
-                else if ((player_choice == "1" || player_choice == "ROCK") && cpu_choice == "3")
-                {
-                    Console.Clear();
-                    Console.WriteLine(player + "s choice: ROCK");
-                    Console.WriteLine("CPU's choice: SCISSORS");
-                    Console.WriteLine(player + " WINS!");
-                    ++score_player;
-                }
-                else if ((player_choice == "2" || player_choice == "PAPER") && cpu_choice == "1")
-                {
-                    Console.Clear();
-                    Console.WriteLine(player + "s choice: PAPER");
-                    Console.WriteLine("CPU's choice: ROCK");
-                    Console.WriteLine(player + " WINS!");
-                    ++score_player;
-                }
-                else if ((player_choice == "2" || player_choice == "PAPER") && cpu_choice == "2")
-                {
-                    Console.Clear();
-                    Console.WriteLine(player + "s choice: PAPER");
-                    Console.WriteLine("CPU's choice: PAPER");
-                    Console.WriteLine("It's a DRAW!");
-                }
-                else if ((player_choice == "2" || player_choice == "PAPER") && cpu_choice == "3")
-                {
-                    Console.Clear();
-                    Console.WriteLine(player + "s choice: PAPER");
-                    Console.WriteLine("CPU's choice: SCISSORS");
-                    Console.WriteLine("CPU WINS!");
-                    ++score_cpu;
-                }
-                else if ((player_choice == "3" || player_choice == "SCISSORS") && cpu_choice == "1")
-                {
-                    Console.Clear();
-                    Console.WriteLine(player + "s choice: SCISSORS");
-                    Console.WriteLine("CPU's choice: ROCK");
-                    Console.WriteLine("CPU WINS!");
-                    ++score_cpu;
-                }
-                else if ((player_choice == "3" || player_choice == "SCISSORS") && cpu_choice == "2")
-                {
-                    Console.Clear();
-                    Console.WriteLine(player + "s choice: SCISSORS");
-                    Console.WriteLine("CPU's choice: PAPER");
-                    Console.WriteLine(player + " WINS!");
-                    ++score_player;
-                }
-                else if ((player_choice == "3" || player_choice == "SCISSORS") && cpu_choice == "3")
-                {
-                    Console.Clear();
-                    Console.WriteLine(player + "s choice: SCISSORS");
-                    Console.WriteLine("CPU's choice: SCISSORS");
-                    Console.WriteLine("It's a DRAW!");
-                }
-
-                // Play again
-                Console.WriteLine();
-                Console.Write("Play again by pressing ENTER");
-                Console.ReadLine();
+                PrintPlayerChoice();
+                PrintCPUChoice();
+                DeclareWinner();
+                NextRound();
                 Console.Clear();
+                Display();                
             }
+            
+            Console.Clear();
+            Display();
+            TheBelt();
+            Console.Clear();
+            Display();
+            PlayAgain();
+        }
 
-            // Declare winner
+        // Get game settings from player
+        public void GetSettings()
+        {
+            StartHeader();
+            rounds = GetRoundNum();
+        }
+
+        // Starting screens heafer
+        public void StartHeader()
+        {
+            Console.SetCursorPosition(0, 6);
+
+            Console.WriteLine("            ***********************************            ");
+            Console.WriteLine("      ***********************************************      ");
+            Console.WriteLine("  **********                                   **********  ");
+            Console.WriteLine("******         ROCK PAPER SCISSORS - THE GAME        ******");
+            Console.WriteLine("  **********                                   **********  ");
+            Console.WriteLine("      ***********************************************      ");
+            Console.WriteLine("            ***********************************            ");            
+        }
+
+        // Go to settings -> round numer
+        public void GoToSettings()
+        {
+            Console.SetCursorPosition(0, 29);
+            Console.ForegroundColor = ConsoleColor.Black;
+
+            while(true)
+            {
+                KeyInfo = Console.ReadKey();
+                if (KeyInfo.Key == ConsoleKey.Enter)
+                {
+                    break;
+                }
+                else if (KeyInfo.Key != ConsoleKey.Enter)
+                {
+                    continue;                   
+                }
+            }           
+            Console.ResetColor();
+            Console.Clear();
+        }
+
+        // Greet the player
+        public void StartGreet()
+        {
+            Console.SetCursorPosition(10, 15);
+            Console.Write("Welcome to the world championship of the");
+            Console.SetCursorPosition(14, 16);
+            Console.Write("ROCK PAPER SCISSORS - THE GAME!");
+            Console.SetCursorPosition(15, 20);
+            Console.Write("PRESS ENTER TO START THE GAME");
+        }       
+
+        // Get the number of rounds
+        public int GetRoundNum()
+        {
+            Console.SetCursorPosition(13, 15);
+            Console.Write("THE GAME WILL BE A: ");
+            Console.SetCursorPosition(33, 15);
+            Console.Write("[1] RACE TO 3");
+            Console.SetCursorPosition(33, 17);
+            Console.Write("[2] RACE TO 5");
+            Console.SetCursorPosition(33, 19);
+            Console.Write("[3] RACE TO 7");
+
+            int get_round = 0;
+
+            ConsoleKeyInfo KeyInfo;
+            KeyInfo = Console.ReadKey(true);
+            if (KeyInfo.Key == ConsoleKey.NumPad1)
+                {
+                    get_round = 3;
+                }
+            if (KeyInfo.Key == ConsoleKey.NumPad2)
+                {
+                    get_round = 5;
+                }
+            if (KeyInfo.Key == ConsoleKey.NumPad3)
+                {
+                    get_round = 7;
+                }
+            return get_round;           
+        }
+   
+        // The gamescreen
+        public void Display()
+        {   Console.SetCursorPosition(0, 0);
+            Console.WriteLine("  *******************************************************  ");
+            Console.WriteLine("***********************************************************");
+            Console.WriteLine("***   RACE TO   ***   PLAYER SCORE   ***    CPU SCORE   ***");
+            Console.WriteLine("***      {0}      ***         {1}        ***        {2}       ***", rounds, score_player, score_cpu);
+            Console.WriteLine("***********************************************************");
+            Console.WriteLine("  *******************************************************  ");
+            Console.WriteLine("    *****                                         *****    ");
+            Console.WriteLine("    *****         PLEASE MAKE YOUR CHOICE         *****    ");
+            Console.WriteLine("    *****      YOU CAN USE NUMPAD OR LETTERS      *****    ");
+            Console.WriteLine("    *****                                         *****    ");
+            Console.WriteLine("    ***************************************************    ");
+            Console.WriteLine("    ***************************************************    ");
+            Console.WriteLine("    ****    ROCK    ***    PAPER    ***  SCISSORS  ****    ");
+            Console.WriteLine("    ****   _,_      ***   +-----+   ***    |  /    ****    ");
+            Console.WriteLine("    ****  / ,  '-,  ***   |:::::|   ***    | /     ****    ");
+            Console.WriteLine("    **** '---,_'_,| ***   |;;;;;|   ***    O       ****    ");
+            Console.WriteLine("    ****            ***   +-----+   ***   ()()     ****    ");
+            Console.WriteLine("    **** [1] or 'r' ***  [2] or 'p' *** [3] or 's' ****    ");
+            Console.WriteLine("    ***************************************************    ");
+            Console.WriteLine("      ***********************************************      ");
+        }
+        
+        // Prints Players choice to the screen
+        public void PrintPlayerChoice()
+        {
+            p_choice = PlayerChoice();
+            Console.SetCursorPosition(10, 21);
+            Console.WriteLine("PLAYERS CHOICE");
+            Console.SetCursorPosition(13, 22);
+            Console.WriteLine("{0}", p_choice);
+        }
+
+        // Get Players choice
+        public string PlayerChoice()
+        {
+            string get_choice = "";
+
+            ConsoleKeyInfo KeyInfo;
+            KeyInfo = Console.ReadKey(true);
+            if (KeyInfo.Key == ConsoleKey.NumPad1 || KeyInfo.Key == ConsoleKey.R)
+                {
+                    get_choice = "  ROCK";
+                }
+            else if (KeyInfo.Key == ConsoleKey.NumPad2 || KeyInfo.Key == ConsoleKey.P)
+                {
+                    get_choice = " PAPER";
+                }
+            else if (KeyInfo.Key == ConsoleKey.NumPad3 || KeyInfo.Key == ConsoleKey.S)
+                {
+                    get_choice = "SCISSORS";
+                }
+            return get_choice;
+        }
+
+        // Prints CPUs choice to the screen
+        public void PrintCPUChoice()
+        {   cpu_choice = CPUChoice();
+            Console.SetCursorPosition(37, 21);
+            Console.WriteLine("CPUS CHOICE");
+            Console.SetCursorPosition(39, 22);
+            Console.WriteLine("{0}", cpu_choice);
+        }
+
+        // Get CPUs choice
+        public string CPUChoice()
+        {
+            Random rndm = new Random();
+            int get_cpu_choice = rndm.Next(1, 4);
+            string got_cpu_choice = get_cpu_choice.ToString();
+            if (got_cpu_choice == "1")
+            {
+                got_cpu_choice = "  ROCK";
+            }
+            else if (got_cpu_choice == "2")
+            {
+                got_cpu_choice = " PAPER";
+            }
+            else if (got_cpu_choice == "3")
+            {
+                got_cpu_choice = "SCISSORS";
+            }           
+            return got_cpu_choice;
+        }
+
+        // Get the result (Player choice vs CPU choice)
+        public string GetResult()
+        {
+            string ask_result= "";
+            if (p_choice == "  ROCK" && cpu_choice == "  ROCK")
+            {
+                ask_result = "IT'S A DRAW!";
+            }
+            else if (p_choice == "  ROCK" && cpu_choice == " PAPER")
+            {
+                ask_result = "CPU WINS!";
+            }
+            else if (p_choice == "  ROCK" && cpu_choice == "SCISSORS")
+            {
+                ask_result = "PLAYER WINS!";
+            }
+            else if (p_choice == " PAPER" && cpu_choice == "  ROCK")
+            {
+                ask_result = "PLAYER WINS!";
+            }
+            else if (p_choice == " PAPER" && cpu_choice == " PAPER")
+            {
+                ask_result = "IT'S A DRAW!";
+            }
+            else if (p_choice == " PAPER" && cpu_choice == "SCISSORS")
+            {
+                ask_result = "CPU WINS!";
+            }
+            else if (p_choice == "SCISSORS" && cpu_choice == "  ROCK")
+            {
+                ask_result = "CPU WINS!";
+            }
+            else if (p_choice == "SCISSORS" && cpu_choice == " PAPER")
+            {
+                ask_result = "PLAYER WINS!";
+            }
+            else if (p_choice == "SCISSORS" && cpu_choice == "SCISSORS")
+            {
+                ask_result = "IT'S A DRAW!";
+            }
+            return ask_result;
+        }
+
+        // Declare the winner
+        public void DeclareWinner()
+        {
+            
+            if (GetResult() == "PLAYER WINS!")
+            {
+                Console.SetCursorPosition(15, 24);
+                Console.WriteLine("+-+-+-+-+-+-+-+-+-+-+-+-+-+-+");
+                Console.SetCursorPosition(15, 25);
+                Console.WriteLine("+-+ - -  PLAYER WINS!  - -+-+");
+                Console.SetCursorPosition(15, 26);
+                Console.WriteLine("+-+-+-+-+-+-+-+-+-+-+-+-+-+-+");
+
+                score_player++;
+            }
+            else if (GetResult() == "CPU WINS!")
+            {
+                Console.SetCursorPosition(15, 24);
+                Console.WriteLine("+-+-+-+-+-+-+-+-+-+-+-+-+-+-+");
+                Console.SetCursorPosition(15, 25);
+                Console.WriteLine("+-+ - -   CPU WINS!  - - -+-+");
+                Console.SetCursorPosition(15, 26);
+                Console.WriteLine("+-+-+-+-+-+-+-+-+-+-+-+-+-+-+");
+
+                score_cpu++;
+            }
+            else if (GetResult() == "IT'S A DRAW!")
+            {
+                Console.SetCursorPosition(15, 24);
+                Console.WriteLine("+-+-+-+-+-+-+-+-+-+-+-+-+-+-+");
+                Console.SetCursorPosition(15, 25);
+                Console.WriteLine("+-+ - -  IT'S A DRAW!  - -+-+");
+                Console.SetCursorPosition(15, 26);
+                Console.WriteLine("+-+-+-+-+-+-+-+-+-+-+-+-+-+-+");
+            }
+        
+        } 
+
+        // Enter to play a new round
+        public void NextRound()
+        {
+            Console.SetCursorPosition(13, 28);
+            Console.Write("START NEXT ROUND BY PRESSING ENTER");
+            Console.ReadLine();
+        }
+
+        // Get the winner for the belt
+        public string GetWinner()
+        {
+            string get_winner = "";
+
             if (score_player == rounds)
             {
-                Console.WriteLine("Gongratulations " + player + "! You WON!");
+                get_winner = "PLAYER";
             }
             else if (score_cpu == rounds)
             {
-                Console.WriteLine("CPU WON! Better luck next time!");
-                Console.WriteLine("");
+                get_winner = "CPU";
             }
-
+            return get_winner;
         }
-        // Loop till one gets score of three 
-        // In future player could decide this at the start of the game???
+        
+        // Who gets the belt
+        public void TheBelt()
+        {
+            winner = GetWinner();
 
-        // Integrate coinflip? Players can choose to flip coin when draw occurs???
+            Console.WriteLine();
+            Console.WriteLine("                      .----''''''----.                ");
+            Console.WriteLine("     ----------'''''''                '''''''---------");
+            Console.WriteLine("       :  :  :           THE   BELT           :  :  : ");
+            Console.WriteLine("     ----------_______                _______---------");
+            Console.WriteLine("                      '----......----'                ");
+            Console.WriteLine();
+            Console.WriteLine("              THE WINNER AND THE NEW CHAMPION!       ");
+            Console.WriteLine();
+            Console.WriteLine("                           {0}", winner);
+            Console.Write("");
+            Console.ReadLine();
+            
+        }
 
+        // Ask player if he wants to play again
+        public void PlayAgain()
+        {
+            Console.WriteLine();
+            Console.WriteLine("    WANT TO PLAY AGAIN AND GET A REMATCH FOR THE BELT?");
+            Console.WriteLine("                   [1] or 'y'     YES");
+            Console.WriteLine("                   [2] or 'n'     NO ");
+
+            ConsoleKeyInfo KeyInfo;
+            KeyInfo = Console.ReadKey();
+            bool answer = true;
+            while (answer)
+            {
+                if (KeyInfo.Key == ConsoleKey.NumPad1 || KeyInfo.Key == ConsoleKey.Y)
+                {
+                    Console.Clear();
+                    score_cpu = 0;
+                    score_player = 0;
+                    GameLoop();
+                }
+                else if (KeyInfo.Key == ConsoleKey.NumPad2 || KeyInfo.Key == ConsoleKey.N)
+                {
+                    Environment.Exit(1);             
+                }
+                else
+                {
+                    Console.Clear();
+                    Display();
+                    PlayAgain();
+                }
+            }       
+
+            
+        }
     }
 }
