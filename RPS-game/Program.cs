@@ -28,7 +28,7 @@ namespace RPS_game
             p.StartScreen();
             p.GameLoop();
         }
-
+        
         // Print the starting screen
         public void StartScreen()
         {
@@ -89,7 +89,7 @@ namespace RPS_game
         // Go to settings -> round numer
         public void GoToSettings()
         {
-            Console.SetCursorPosition(0, 29);
+            Console.SetCursorPosition(1, 32);
             Console.ForegroundColor = ConsoleColor.Black;
 
             while(true)
@@ -97,15 +97,15 @@ namespace RPS_game
                 KeyInfo = Console.ReadKey();
                 if (KeyInfo.Key == ConsoleKey.Enter)
                 {
+                    Console.ResetColor();
+                    Console.Clear();
                     break;
                 }
-                else if (KeyInfo.Key != ConsoleKey.Enter)
+                else
                 {
-                    continue;                   
+                    Console.SetCursorPosition(1,32);                
                 }
-            }           
-            Console.ResetColor();
-            Console.Clear();
+            }                     
         }
 
         // Greet the player
@@ -131,23 +131,37 @@ namespace RPS_game
             Console.SetCursorPosition(33, 19);
             Console.Write("[3] RACE TO 7");
 
+            Console.SetCursorPosition(1, 32);
+            Console.ForegroundColor = ConsoleColor.Black;
+
             int get_round = 0;
 
-            ConsoleKeyInfo KeyInfo;
-            KeyInfo = Console.ReadKey(true);
-            if (KeyInfo.Key == ConsoleKey.NumPad1)
+            while(true)
+            {
+                KeyInfo = Console.ReadKey();
+                if (KeyInfo.Key == ConsoleKey.NumPad1 || KeyInfo.Key == ConsoleKey.D1)
                 {
                     get_round = 3;
+                    Console.ResetColor();
+                    return get_round;
                 }
-            if (KeyInfo.Key == ConsoleKey.NumPad2)
+                else if (KeyInfo.Key == ConsoleKey.NumPad2 || KeyInfo.Key == ConsoleKey.D2)
                 {
                     get_round = 5;
+                    Console.ResetColor();
+                    return get_round;
                 }
-            if (KeyInfo.Key == ConsoleKey.NumPad3)
+                else if (KeyInfo.Key == ConsoleKey.NumPad3 || KeyInfo.Key == ConsoleKey.D3)
                 {
                     get_round = 7;
+                    Console.ResetColor();
+                    return get_round;
                 }
-            return get_round;           
+                else 
+                {
+                    Console.SetCursorPosition(1,32);
+                }
+            }                       
         }
    
         // The gamescreen
@@ -161,7 +175,7 @@ namespace RPS_game
             Console.WriteLine("  *******************************************************  ");
             Console.WriteLine("    *****                                         *****    ");
             Console.WriteLine("    *****         PLEASE MAKE YOUR CHOICE         *****    ");
-            Console.WriteLine("    *****      YOU CAN USE NUMPAD OR LETTERS      *****    ");
+            Console.WriteLine("    *****      YOU CAN USE NUMBERS OR LETTERS     *****    ");
             Console.WriteLine("    *****                                         *****    ");
             Console.WriteLine("    ***************************************************    ");
             Console.WriteLine("    ***************************************************    ");
@@ -188,23 +202,37 @@ namespace RPS_game
         // Get Players choice
         public string PlayerChoice()
         {
+            Console.SetCursorPosition(1, 32);
+            Console.ForegroundColor = ConsoleColor.Black;
+
             string get_choice = "";
 
-            ConsoleKeyInfo KeyInfo;
-            KeyInfo = Console.ReadKey(true);
-            if (KeyInfo.Key == ConsoleKey.NumPad1 || KeyInfo.Key == ConsoleKey.R)
+            while (true)
+            {
+                KeyInfo = Console.ReadKey();
+                if (KeyInfo.Key == ConsoleKey.NumPad1 || KeyInfo.Key == ConsoleKey.D1 || KeyInfo.Key == ConsoleKey.R)
                 {
                     get_choice = "  ROCK";
+                    Console.ResetColor();
+                    return get_choice;
                 }
-            else if (KeyInfo.Key == ConsoleKey.NumPad2 || KeyInfo.Key == ConsoleKey.P)
+                else if (KeyInfo.Key == ConsoleKey.NumPad2 || KeyInfo.Key == ConsoleKey.D2 || KeyInfo.Key == ConsoleKey.P)
                 {
                     get_choice = " PAPER";
+                    Console.ResetColor();
+                    return get_choice;
                 }
-            else if (KeyInfo.Key == ConsoleKey.NumPad3 || KeyInfo.Key == ConsoleKey.S)
+                else if (KeyInfo.Key == ConsoleKey.NumPad3 || KeyInfo.Key == ConsoleKey.D3 || KeyInfo.Key == ConsoleKey.S)
                 {
                     get_choice = "SCISSORS";
+                    Console.ResetColor();
+                    return get_choice;
                 }
-            return get_choice;
+                else
+                {
+                    Console.SetCursorPosition(1, 32);
+                }
+            }            
         }
 
         // Prints CPUs choice to the screen
@@ -323,7 +351,24 @@ namespace RPS_game
         {
             Console.SetCursorPosition(13, 28);
             Console.Write("START NEXT ROUND BY PRESSING ENTER");
-            Console.ReadLine();
+
+            Console.SetCursorPosition(1, 32);
+            Console.ForegroundColor = ConsoleColor.Black;
+
+            while(true)
+            {
+                KeyInfo = Console.ReadKey();
+                if (KeyInfo.Key == ConsoleKey.Enter)
+                {
+                    Console.ResetColor();
+                    Console.Clear();
+                    break;
+                }
+                else
+                {
+                    Console.SetCursorPosition(1,32);                
+                }
+            }                      
         }
 
         // Get the winner for the belt
@@ -358,8 +403,23 @@ namespace RPS_game
             Console.WriteLine();
             Console.WriteLine("                           {0}", winner);
             Console.Write("");
-            Console.ReadLine();
             
+            Console.SetCursorPosition(1, 32);
+            Console.ForegroundColor = ConsoleColor.Black;
+
+            while(true)
+            {
+                KeyInfo = Console.ReadKey();
+                if (KeyInfo.Key == ConsoleKey.Enter)
+                {
+                    Console.ResetColor();
+                    break;
+                }
+                else
+                {
+                    Console.SetCursorPosition(1,32);                
+                }
+            }            
         }
 
         // Ask player if he wants to play again
@@ -367,34 +427,35 @@ namespace RPS_game
         {
             Console.WriteLine();
             Console.WriteLine("    WANT TO PLAY AGAIN AND GET A REMATCH FOR THE BELT?");
+            Console.WriteLine();
             Console.WriteLine("                   [1] or 'y'     YES");
             Console.WriteLine("                   [2] or 'n'     NO ");
 
-            ConsoleKeyInfo KeyInfo;
-            KeyInfo = Console.ReadKey();
-            bool answer = true;
-            while (answer)
+            Console.SetCursorPosition(1, 32);
+            Console.ForegroundColor = ConsoleColor.Black;
+          
+            while (true)
             {
-                if (KeyInfo.Key == ConsoleKey.NumPad1 || KeyInfo.Key == ConsoleKey.Y)
+                ConsoleKeyInfo KeyInfo;
+                KeyInfo = Console.ReadKey();
+
+                if (KeyInfo.Key == ConsoleKey.NumPad1 || KeyInfo.Key == ConsoleKey.D1 || KeyInfo.Key == ConsoleKey.Y)
                 {
+                    Console.ResetColor();
                     Console.Clear();
                     score_cpu = 0;
                     score_player = 0;
                     GameLoop();
                 }
-                else if (KeyInfo.Key == ConsoleKey.NumPad2 || KeyInfo.Key == ConsoleKey.N)
+                else if (KeyInfo.Key == ConsoleKey.NumPad2 || KeyInfo.Key == ConsoleKey.D2 || KeyInfo.Key == ConsoleKey.N)
                 {
                     Environment.Exit(1);             
                 }
                 else
                 {
-                    Console.Clear();
-                    Display();
-                    PlayAgain();
+                    Console.SetCursorPosition(1, 32);
                 }
-            }       
-
-            
+            }                  
         }
     }
 }
